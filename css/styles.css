@@ -134,3 +134,19 @@ label {
 .toggle-input:checked + .toggle-label::after {
     transform: translateX(26px);
 }
+
+.styled-file-input {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #0073e6;
+    border-radius: 5px;
+    background-color: #f0f8ff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.styled-file-input:hover {
+    background-color: #d0e7ff;
+}
