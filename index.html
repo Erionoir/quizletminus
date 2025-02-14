@@ -9,9 +9,11 @@
 <body>
     <div class="container">
         <h1>QuizletMinus</h1>
-        <input type="file" id="fileInput" accept=".json" class="styled-file-input">
-        <label for="shuffleToggle" class="toggle-label">Shuffle Questions</label>
-        <input type="checkbox" id="shuffleToggle" class="toggle-input">
+        <div class="controls">
+            <input type="file" id="fileInput" accept=".json" class="styled-file-input">
+            <label for="shuffleToggle" class="toggle-label">Shuffle Questions</label>
+            <input type="checkbox" id="shuffleToggle" class="toggle-input">
+        </div>
         <div id="quiz"></div>
         <div class="timer" id="timer">Time left: 2:00</div>
         <button id="startButton">Start Test</button>
@@ -108,7 +110,7 @@
             const grade = (score / questions.length) * 100;
             const timeBonus = Math.floor(timeLeft / 10);
             const finalScore = score + timeBonus;
-            document.getElementById('score').innerHTML = `Your score: ${finalScore}/${questions.length} (${grade.toFixed(2)}%)`;
+            document.getElementById('score').innerHTML = `Your score: ${finalScore}/${questions.length} (${grade.toFixed(2)}%)<br>Time Bonus: ${timeBonus}`;
         }
     </script>
 </body>
