@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizlet Mockup</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Quizlet Mockup</h1>
+        <input type="file" id="fileInput" accept=".txt">
+        <div id="quiz"></div>
+        <div class="timer" id="timer">Time left: 2:00</div>
+        <button id="startButton">Start Test</button>
+    </div>
+
+    <script>
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let timer;
+        let timeLeft = 120;
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    questions = text.split('\n').map(line => {
+                        const [question, answer] = line.split(',');
+                        return { question, answer };
+                    });
+                    displayQuestion();
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        document.getElementById('startButton').addEventListener('click', function() {
+            startTimer();
+        });
+
+        function displayQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const questionObj = questions[currentQuestionIndex];
+                document.getElementById('quiz').innerHTML = `
+                    <div class="question">${questionObj.question}</div>
+                    <div class="answer">${questionObj.answer}</div>
+                `;
+            } else {
+                document.getElementById('quiz').innerHTML = '<div class="question">Test Completed!</div>';
+                clearInterval(timer);
+            }
+        }
+
+        function startTimer() {
+            timer = setInterval(function() {
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('timer').innerHTML = 'Time is up!';
+                    document.getElementById('quiz').innerHTML = '<div class="question">Time is up!</div>';
+                } else {
+                    timeLeft--;
+                    document.getElementById('timer').innerHTML = `Time left: ${Math.floor(timeLeft / 60)}:${timeLeft % 60 < 10 ? '0' : ''}${timeLeft % 60}`;
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
