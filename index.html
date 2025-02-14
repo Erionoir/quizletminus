@@ -9,10 +9,13 @@
 <body>
     <div class="container">
         <h1>Quizlet Mockup</h1>
-        <input type="file" id="fileInput" accept=".txt">
+        <input type="file" id="fileInput" accept=".json">
+        <label for="shuffleToggle">Shuffle Questions</label>
+        <input type="checkbox" id="shuffleToggle">
         <div id="quiz"></div>
         <div class="timer" id="timer">Time left: 2:00</div>
         <button id="startButton">Start Test</button>
+        <div id="score"></div>
     </div>
 
     <script>
@@ -20,24 +23,29 @@
         let currentQuestionIndex = 0;
         let timer;
         let timeLeft = 120;
+        let score = 0;
+        let shuffle = false;
 
         document.getElementById('fileInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const text = e.target.result;
-                    questions = text.split('\n').map(line => {
-                        const [question, answer] = line.split(',');
-                        return { question, answer };
-                    });
+                    questions = JSON.parse(e.target.result);
                     displayQuestion();
                 };
                 reader.readAsText(file);
             }
         });
 
+        document.getElementById('shuffleToggle').addEventListener('change', function(event) {
+            shuffle = event.target.checked;
+        });
+
         document.getElementById('startButton').addEventListener('click', function() {
+            if (shuffle) {
+                questions = questions.sort(() => Math.random() - 0.5);
+            }
             startTimer();
         });
 
@@ -46,12 +54,24 @@
                 const questionObj = questions[currentQuestionIndex];
                 document.getElementById('quiz').innerHTML = `
                     <div class="question">${questionObj.question}</div>
-                    <div class="answer">${questionObj.answer}</div>
+                    <input type="text" id="answerInput" placeholder="Type your answer here">
+                    <button onclick="checkAnswer()">Submit Answer</button>
                 `;
             } else {
                 document.getElementById('quiz').innerHTML = '<div class="question">Test Completed!</div>';
                 clearInterval(timer);
+                displayScore();
             }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value.trim();
+            const correctAnswer = questions[currentQuestionIndex].answer.trim();
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                score++;
+            }
+            currentQuestionIndex++;
+            displayQuestion();
         }
 
         function startTimer() {
@@ -60,11 +80,17 @@
                     clearInterval(timer);
                     document.getElementById('timer').innerHTML = 'Time is up!';
                     document.getElementById('quiz').innerHTML = '<div class="question">Time is up!</div>';
+                    displayScore();
                 } else {
                     timeLeft--;
                     document.getElementById('timer').innerHTML = `Time left: ${Math.floor(timeLeft / 60)}:${timeLeft % 60 < 10 ? '0' : ''}${timeLeft % 60}`;
                 }
             }, 1000);
+        }
+
+        function displayScore() {
+            const grade = (score / questions.length) * 100;
+            document.getElementById('score').innerHTML = `Your score: ${score}/${questions.length} (${grade.toFixed(2)}%)`;
         }
     </script>
 </body>
