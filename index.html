@@ -15,7 +15,7 @@
             <input type="checkbox" id="shuffleToggle" class="toggle-input">
         </div>
         <div id="quiz"></div>
-        <div class="timer" id="timer">Time left: 2:00</div>
+        <div class="timer hidden" id="timer">Time left: 2:00</div>
         <button id="startButton">Start Test</button>
         <div id="score"></div>
         <div id="instructions">
@@ -28,6 +28,9 @@
     ]
 }</pre>
             <p>Then, select the file using the file chooser above.</p>
+        </div>
+        <div class="overlay hidden" id="overlay">
+            <div id="overlayContent"></div>
         </div>
     </div>
 
@@ -65,18 +68,21 @@
             timeLeft = 120;
             startTimer();
             displayQuestion();
+            document.getElementById('timer').classList.remove('hidden');
+            document.getElementById('overlay').classList.remove('hidden');
+            document.getElementById('startButton').classList.add('hidden');
         });
 
         function displayQuestion() {
             if (currentQuestionIndex < questions.length) {
                 const questionObj = questions[currentQuestionIndex];
-                document.getElementById('quiz').innerHTML = `
+                document.getElementById('overlayContent').innerHTML = `
                     <div class="question">${questionObj.question}</div>
                     <input type="text" id="answerInput" placeholder="Type your answer here">
                     <button onclick="checkAnswer()">Submit Answer</button>
                 `;
             } else {
-                document.getElementById('quiz').innerHTML = '<div class="question">Test Completed!</div>';
+                document.getElementById('overlayContent').innerHTML = '<div class="question">Test Completed!</div>';
                 clearInterval(timer);
                 displayScore();
             }
@@ -97,7 +103,7 @@
                 if (timeLeft <= 0) {
                     clearInterval(timer);
                     document.getElementById('timer').innerHTML = 'Time is up!';
-                    document.getElementById('quiz').innerHTML = '<div class="question">Time is up!</div>';
+                    document.getElementById('overlayContent').innerHTML = '<div class="question">Time is up!</div>';
                     displayScore();
                 } else {
                     timeLeft--;
