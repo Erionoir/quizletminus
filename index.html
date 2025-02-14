@@ -106,7 +106,9 @@
 
         function displayScore() {
             const grade = (score / questions.length) * 100;
-            document.getElementById('score').innerHTML = `Your score: ${score}/${questions.length} (${grade.toFixed(2)}%)`;
+            const timeBonus = Math.floor(timeLeft / 10);
+            const finalScore = score + timeBonus;
+            document.getElementById('score').innerHTML = `Your score: ${finalScore}/${questions.length} (${grade.toFixed(2)}%)`;
         }
     </script>
 </body>
