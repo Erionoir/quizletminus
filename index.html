@@ -3,19 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quizlet Mockup</title>
+    <title>QuizletMinus</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Quizlet Mockup</h1>
+        <h1>QuizletMinus</h1>
         <input type="file" id="fileInput" accept=".json">
-        <label for="shuffleToggle">Shuffle Questions</label>
-        <input type="checkbox" id="shuffleToggle">
+        <label for="shuffleToggle" class="toggle-label">Shuffle Questions</label>
+        <input type="checkbox" id="shuffleToggle" class="toggle-input">
         <div id="quiz"></div>
         <div class="timer" id="timer">Time left: 2:00</div>
         <button id="startButton">Start Test</button>
         <div id="score"></div>
+        <div id="instructions">
+            <h2>Instructions</h2>
+            <p>To load question-answer pairs, create a JSON file with the following format:</p>
+            <pre>{
+    "questions": [
+        { "question": "What is the capital of France?", "answer": "Paris" },
+        { "question": "What is 2 + 2?", "answer": "4" }
+    ]
+}</pre>
+            <p>Then, select the file using the file chooser above.</p>
+        </div>
     </div>
 
     <script>
@@ -31,8 +42,9 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    questions = JSON.parse(e.target.result);
-                    displayQuestion();
+                    const data = JSON.parse(e.target.result);
+                    questions = data.questions;
+                    document.getElementById('quiz').innerHTML = `<div class="question">Loaded ${questions.length} question-answer pairs.</div>`;
                 };
                 reader.readAsText(file);
             }
@@ -46,7 +58,11 @@
             if (shuffle) {
                 questions = questions.sort(() => Math.random() - 0.5);
             }
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 120;
             startTimer();
+            displayQuestion();
         });
 
         function displayQuestion() {

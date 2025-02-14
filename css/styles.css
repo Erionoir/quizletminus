@@ -57,6 +57,17 @@ button:hover {
 input[type="file"] {
     display: block;
     margin: 20px auto;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #0073e6;
+    border-radius: 5px;
+    background-color: #f0f8ff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="file"]:hover {
+    background-color: #d0e7ff;
 }
 
 input[type="text"] {
@@ -77,4 +88,49 @@ label {
     font-size: 22px;
     color: #0073e6;
     margin-top: 20px;
+}
+
+.toggle-label {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 34px;
+}
+
+.toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-label::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 26px;
+    height: 26px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.toggle-input:checked + .toggle-label::before {
+    background-color: #0073e6;
+}
+
+.toggle-input:checked + .toggle-label::after {
+    transform: translateX(26px);
 }
